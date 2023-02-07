@@ -1,0 +1,100 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2706
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c0\c1\c1;\cssrgb\c100000\c100000\c99985\c0;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 import p1_random as p1\
+rng = p1.P1Random()\
+game_count = 1\
+win_count = 0\
+loss_count = 0\
+tie_count = 0\
+total = 0\
+game_over = False\
+start = True\
+# takes in a random number and returns the value of the card + prints it out\
+def get_card(player_num):\
+    if player_num == 1:\
+        player_card = 'ACE'\
+    elif (player_num > 1) and (player_num < 11):\
+        player_card = str(player_num)\
+    elif player_num == 11:\
+        player_card = 'JACK'\
+        player_num = 10\
+    elif player_num == 12:\
+        player_card = 'QUEEN'\
+        player_num = 10\
+    else:\
+        player_card = 'KING'\
+        player_num = 10\
+    print(f'Your card is a \{player_card\}!')\
+    return player_num\
+while start:\
+    # the start of each new game including an initial deal to the player and printing the game count\
+    total = 0\
+    print('START GAME #' + str(game_count))\
+    player_num = rng.next_int(13) + 1\
+    total += get_card(player_num)\
+    print(f'Your hand is: \{total\}')\
+    while not game_over:\
+        #prints options for player and asks to choose an option\
+        print(f'1. Get another card')\
+        print(f'2. Hold hand')\
+        print(f'3. Print statistics')\
+        print(f'4. Exit')\
+        choice = int(input('Choose an option: '))\
+        if choice == 1:\
+            player_num = rng.next_int(13) + 1\
+            total += get_card(player_num)\
+            print(f'Your hand is: \{total\}')\
+            #if statements checks after the new card is added if the new total is greater than or equal to 21\
+            if total > 21:\
+                print('You exceeded 21! You lose.')\
+                loss_count += 1\
+                game_count += 1\
+                break\
+            if total == 21:\
+                print('BLACKJACK! You win!')\
+                win_count += 1\
+                game_count += 1\
+                break\
+        if choice == 2:\
+            #randomly generates a dealers hand between 16 and 26\
+            dealer_num = rng.next_int(11) + 16\
+            print(f'Dealer\\'s hand: \{dealer_num\}')\
+            print(f'Your hand is: \{total\}')\
+            #compares dealer's and player's hand to see who wins\
+            if (dealer_num < total) or (dealer_num > 21):\
+                print('You win!')\
+                win_count += 1\
+                game_count += 1\
+                break\
+            if dealer_num > total:\
+                print('Dealer wins!')\
+                loss_count += 1\
+                game_count += 1\
+                break\
+            if dealer_num == total:\
+                print('It\\'s a tie! No one wins!')\
+                tie_count += 1\
+                game_count += 1\
+                break\
+\
+        if choice == 3:\
+            # prints stats of the game based off variables that are updated after each game is completed\
+            print(f'Number of Player wins: \{win_count\}')\
+            print(f'Number of Dealer wins: \{loss_count\}')\
+            print(f'Number of tie games: \{tie_count\}')\
+            print(f'Total # of games played is: \{game_count-1\}')\
+            print(f'Percentage of Player wins: \{(win_count/(game_count-1))*100:.1f\}%')\
+            continue\
+        if choice == 4:\
+            start = False\
+            break\
+        if (choice > 4) or (choice < 1):\
+            print('Invalid input!')\
+            print('Please enter an integer value between 1 and 4.')\
+            continue\
+}
